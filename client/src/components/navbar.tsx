@@ -5,14 +5,14 @@ import Link from "next/link";
 
 const Navbar = () => {
   return (
-    <nav className="p-2 ">
+    <nav className="p-3 bg-white/30 dark:bg-black/30 border-b ">
       <ul className="flex justify-between  items-center">
         <Link href="/" className="text-foreground font-bold text-2xl">financeX</Link>
         <div className="flex items-center gap-x-2">
           <ModeToggle />
           <SignedIn>
             {/* Mount the UserButton component */}
-            <UserButton />
+            <UserButton  />
           </SignedIn>
         </div>
       </ul>
