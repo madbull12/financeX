@@ -12,6 +12,7 @@ import { ThemeProvider } from "~/components/theme-provider";
 import { Poppins,Montserrat } from 'next/font/google';
 import { Provider } from "react-redux";
 import store from "~/store";
+import StoreProvider from "~/context/store-provider";
 const poppins = Poppins({
   subsets: ['latin'],
   display: 'swap',
@@ -34,6 +35,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" className={`${poppins.className}`}>
         <body>
+          <StoreProvider>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -44,6 +46,8 @@ export default function RootLayout({
             <Navbar />
             {children}
           </ThemeProvider>
+          </StoreProvider>
+ 
 
         </body>
       </html>
