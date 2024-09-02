@@ -10,6 +10,8 @@ import {
 import Navbar from "~/components/navbar";
 import { ThemeProvider } from "~/components/theme-provider";
 import { Poppins,Montserrat } from 'next/font/google';
+import { Provider } from "react-redux";
+import store from "~/store";
 const poppins = Poppins({
   subsets: ['latin'],
   display: 'swap',
@@ -38,9 +40,11 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+          
             <Navbar />
             {children}
           </ThemeProvider>
+
         </body>
       </html>
     </ClerkProvider>
