@@ -15,7 +15,13 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "~/store";
+import { addRecord } from "~/store/slices/financialRecord";
+import { useUser } from "@clerk/nextjs";
 const FinancialRecordForm = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { user } = useUser()
   // 1. Define your form.
   const form = useForm<FinancialRecordType>({
     resolver: zodResolver(financialRecordSchema),
@@ -26,11 +32,16 @@ const FinancialRecordForm = () => {
       paymentMethod: "",
     },
   });
-
+  const status = useSelector((state: RootState) => state.financialRecord.status);
+  const error = useSelector((state: RootState) => state.financialRecord.error);
   function onSubmit(values: FinancialRecordType) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    dispatch(addRecord(
+      {...values,userId:user?.id as string}
+    ));
+
+    form.reset()
   }
   return (
     <Form {...form}>
@@ -112,7 +123,7 @@ const FinancialRecordForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit">{status==="loading" ? "Adding" : "Add"}</Button>
       </form>
     </Form>
   );

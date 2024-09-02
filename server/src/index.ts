@@ -1,11 +1,13 @@
 import 'dotenv/config'
 import express, { type Express } from 'express'
 import mongoose from 'mongoose';
+import cors from 'cors'
 import financialRoutes from './routes/financial-record'
 const app:Express = express();
 const port = process.env.PORT || 5000;
 
-app.use(express.json())
+app.use(express.json());
+app.use(cors())
 app.use('/api/financial-records',financialRoutes)
 const mongoURI: string = process.env.MONGO_URI as string;
 
