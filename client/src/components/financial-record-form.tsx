@@ -14,14 +14,21 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "~/store";
-import { addRecord } from "~/store/slices/financialRecord";
+import { addRecord, addRecordState } from "~/store/slices/financialRecord";
 import { useUser } from "@clerk/nextjs";
+import { ReloadIcon } from "@radix-ui/react-icons";
 const FinancialRecordForm = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { user } = useUser()
+  const { user } = useUser();
   // 1. Define your form.
   const form = useForm<FinancialRecordType>({
     resolver: zodResolver(financialRecordSchema),
@@ -32,17 +39,33 @@ const FinancialRecordForm = () => {
       paymentMethod: "",
     },
   });
-  const status = useSelector((state: RootState) => state.financialRecord.status);
+  const status = useSelector(
+    (state: RootState) => state.financialRecord.status
+  );
   const error = useSelector((state: RootState) => state.financialRecord.error);
   function onSubmit(values: FinancialRecordType) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    dispatch(addRecord(
-      {...values,userId:user?.id as string,amount:+values.amount}
-    ));
+    dispatch(
+      addRecord({
+        ...values,
+        userId: user?.id as string,
+        amount: +values.amount,
+      })
+    );
+    dispatch(
+      addRecordState(
+        {
+          ...values,
+          userId: user?.id as string,
+          amount: +values.amount,
+          createdAt:new Date()
+        }
+      )
+    )
 
-    form.reset()
-    console.log(values)
+    form.reset();
+    console.log(values);
   }
   return (
     <Form {...form}>
@@ -91,12 +114,17 @@ const FinancialRecordForm = () => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="m@example.com">m@example.com</SelectItem>
-                  <SelectItem value="m@google.com">m@google.com</SelectItem>
-                  <SelectItem value="m@support.com">m@support.com</SelectItem>
+                  {/* <SelectItem value="">Select a category</SelectItem> */}
+
+                  <SelectItem value="Food">Food</SelectItem>
+                  <SelectItem value="Rent">Rent</SelectItem>
+                  <SelectItem value="Salary">Salary</SelectItem>
+                  <SelectItem value="Utilities">Utilities</SelectItem>
+                  <SelectItem value="Entertainment">Entertainment</SelectItem>
+                  <SelectItem value="Other">Other</SelectItem>
                 </SelectContent>
               </Select>
-       
+
               <FormMessage />
             </FormItem>
           )}
@@ -114,9 +142,11 @@ const FinancialRecordForm = () => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="m@example.com">m@example.com</SelectItem>
-                  <SelectItem value="m@google.com">m@google.com</SelectItem>
-                  <SelectItem value="m@support.com">m@support.com</SelectItem>
+                  {/* <SelectItem value="">Select a payment method</SelectItem> */}
+
+                  <SelectItem value="Credit Card">Credit Card</SelectItem>
+                  <SelectItem value="Cash">Cash</SelectItem>
+                  <SelectItem value="Bank Transfer">Bank Transfer</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -124,7 +154,11 @@ const FinancialRecordForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit">{status==="loading" ? "Adding" : "Add"}</Button>
+        <Button type="submit" disabled={status === "loading"}>
+          {status==='loading' ? <ReloadIcon className="mr-2 size-4 animate-spin" />: null}
+        
+          {status === "loading" ? "Adding" : "Add"}
+        </Button>
       </form>
     </Form>
   );

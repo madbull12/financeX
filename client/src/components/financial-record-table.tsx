@@ -1,23 +1,30 @@
-"use client"
+"use client";
 
-import { useUser } from '@clerk/nextjs'
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { columns, FinancialRecord } from '~/app/records/columns'
-import { DataTable } from '~/app/records/data-table'
-import { AppDispatch, RootState } from '~/store'
-import { fetchRecords } from '~/store/slices/financialRecord'
+import { useUser } from "@clerk/nextjs";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { columns, FinancialRecord } from "~/app/records/columns";
+import { DataTable } from "~/app/records/data-table";
+import { AppDispatch, RootState } from "~/store";
+import { fetchRecords, setRecords } from "~/store/slices/financialRecord";
 
-const FinancialRecordTable = ({ records }:{ records:FinancialRecord[] }) => {
-    const financialRecords = useSelector((state: RootState) => state.financialRecord.financialRecords);
-    console.log(financialRecords)
-    const { user } = useUser();
-    console.log(user?.id)
-
+const FinancialRecordTable = ({ records }: { records: FinancialRecord[] }) => {
+  console.log(records, "records");
+  const dispatch = useDispatch<AppDispatch>();
+  const recordSlice = useSelector(
+    (state: RootState) => state.financialRecord
+  );
+  const { financialRecords:clientRecords} = recordSlice 
+  console.log("client records", clientRecords);
+  useEffect(() => {
+    dispatch(setRecords(records));
+  }, [records]);
   return (
-    // <DataTable columns={columns} data={financialRecords} />
-    <></>
-  )
-}
+    <div className="w-3/4 mx-auto">
+       <DataTable columns={columns} data={clientRecords} />
+      
+    </div>
+  );
+};
 
-export default FinancialRecordTable
+export default FinancialRecordTable;

@@ -6,7 +6,15 @@ interface FinancialRecordState {
     amount: number;
     category: string;
     paymentMethod: string;
-    userId:string
+    createdAt:Date,
+    userId?:string
+}
+interface TransformFinancialRecordType {
+    description: string;
+    amount: number;
+    category: string;
+    paymentMethod: string;
+    userId?:string
 }
 
 interface InitialState {
@@ -21,7 +29,7 @@ const initialState: InitialState = {
     error: null,
 };
 
-export const addRecord = createAsyncThunk('financialRecord/addRecord', async (record: FinancialRecordState) => {
+export const addRecord = createAsyncThunk('financialRecord/addRecord', async (record:TransformFinancialRecordType) => {
     await axios.post("http://localhost:5000/api/financial-records", record)
 })
 
@@ -35,7 +43,12 @@ const financialRecordSlice = createSlice({
     name: 'financialRecord',
     initialState,
     reducers: {
-
+        setRecords:(state,action:PayloadAction<FinancialRecordState[]>)=>{
+            state.financialRecords = action.payload
+        },
+        addRecordState:(state,action:PayloadAction<FinancialRecordState>) => {
+          state.financialRecords.push(action.payload)
+        }
     },
 
     extraReducers: (builder) => {
@@ -44,9 +57,9 @@ const financialRecordSlice = createSlice({
             state.status = 'loading';
             state.error = null;
           })
-          .addCase(addRecord.fulfilled, (state, action: PayloadAction<FinancialRecordState>) => {
+          .addCase(addRecord.fulfilled, (state) => {
             state.status = 'succeeded';
-            state.financialRecords.push(action.payload);
+            // state.financialRecords.push(action.payload);
           })
           .addCase(addRecord.rejected, (state, action) => {
             state.status = 'failed';
@@ -71,6 +84,6 @@ const financialRecordSlice = createSlice({
     }
 });
 
-export const { } = financialRecordSlice.actions;
+export const { setRecords,addRecordState } = financialRecordSlice.actions;
 
 export default financialRecordSlice.reducer;

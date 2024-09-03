@@ -18,7 +18,7 @@ export default async function Home() {
     <main className="items-center p-4 justify-center ">
       <WelcomeText />
       <FinancialRecordForm />
-      <FinancialRecordTable />
+      <FinancialRecordTable records={records.data} />
     </main>
   );
 }
