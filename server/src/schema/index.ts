@@ -2,7 +2,6 @@ import { z } from 'zod'
 
 export const financialCreateSchema = z.object({
     userId: z.string(),
-    date: z.date(),
     description: z.string().optional(),
     amount: z.number(),
     category: z.string(),
@@ -10,7 +9,6 @@ export const financialCreateSchema = z.object({
 })
 export const financialUpdateSchema = z.object({
     userId: z.string(),
-    date: z.date(),
     description: z.string().optional(),
     amount: z.number().optional(),
     category: z.string().optional(),

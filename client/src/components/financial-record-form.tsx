@@ -38,10 +38,11 @@ const FinancialRecordForm = () => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     dispatch(addRecord(
-      {...values,userId:user?.id as string}
+      {...values,userId:user?.id as string,amount:+values.amount}
     ));
 
     form.reset()
+    console.log(values)
   }
   return (
     <Form {...form}>
