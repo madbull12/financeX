@@ -23,7 +23,7 @@ import {
 } from "./ui/select";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "~/store";
-import { addRecord, addRecordState } from "~/store/slices/financialRecord";
+import { addRecord, addRecordState, deleteRecord } from "~/store/slices/financialRecord";
 import { useUser } from "@clerk/nextjs";
 import { ReloadIcon } from "@radix-ui/react-icons";
 const FinancialRecordForm = () => {
@@ -39,9 +39,10 @@ const FinancialRecordForm = () => {
       paymentMethod: "",
     },
   });
-  const status = useSelector(
-    (state: RootState) => state.financialRecord.status
+  const recordState = useSelector(
+    (state: RootState) => state.financialRecord
   );
+  const { addStatus } = recordState
   const error = useSelector((state: RootState) => state.financialRecord.error);
   function onSubmit(values: FinancialRecordType) {
     // Do something with the form values.
@@ -67,6 +68,8 @@ const FinancialRecordForm = () => {
     form.reset();
     console.log(values);
   }
+
+
   return (
     <Form {...form}>
       <form
@@ -154,10 +157,10 @@ const FinancialRecordForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={status === "loading"}>
-          {status==='loading' ? <ReloadIcon className="mr-2 size-4 animate-spin" />: null}
+        <Button type="submit" disabled={addStatus === "loading"}>
+          {addStatus==='loading' ? <ReloadIcon className="mr-2 size-4 animate-spin" />: null}
         
-          {status === "loading" ? "Adding" : "Add"}
+          {addStatus === "loading" ? "Adding" : "Add"}
         </Button>
       </form>
     </Form>

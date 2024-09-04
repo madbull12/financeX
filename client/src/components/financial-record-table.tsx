@@ -3,10 +3,11 @@
 import { useUser } from "@clerk/nextjs";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { columns, FinancialRecord } from "~/app/records/columns";
+import { columns } from "~/app/records/columns";
 import { DataTable } from "~/app/records/data-table";
 import { AppDispatch, RootState } from "~/store";
 import { fetchRecords, setRecords } from "~/store/slices/financialRecord";
+import { FinancialRecord } from "~/types/financial-record";
 
 const FinancialRecordTable = ({ records }: { records: FinancialRecord[] }) => {
   console.log(records, "records");
@@ -15,7 +16,6 @@ const FinancialRecordTable = ({ records }: { records: FinancialRecord[] }) => {
     (state: RootState) => state.financialRecord
   );
   const { financialRecords:clientRecords} = recordSlice 
-  console.log("client records", clientRecords);
   useEffect(() => {
     dispatch(setRecords(records));
   }, [records]);
